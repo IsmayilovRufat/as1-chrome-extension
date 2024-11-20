@@ -1,11 +1,54 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>LinkedIn Profile Scraper</title>
-</head>
-<body>
-    <h1>LinkedIn Profile Scraper</h1>
-    <button id="downloadCsvBtn">Download CSV</button>
+  <head>
+    <title>LinkedIn Profile Editor</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 10px;
+        width: 300px;
+      }
+      .editable {
+        margin-bottom: 10px;
+      }
+      label {
+        font-weight: bold;
+        display: block;
+      }
+      input {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+      }
+      button {
+        background-color: #0073b1;
+        color: white;
+        padding: 10px;
+        border: none;
+        width: 100%;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #005d8c;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>LinkedIn Profile Editor</h3>
+    <div id="profileFields"></div>
+
+    <!-- Add Custom Fields Section -->
+    <div id="addCustomFields">
+      <h4>Add Custom Field</h4>
+      <label for="customFieldLabel">Field Label</label>
+      <input type="text" id="customFieldLabel" placeholder="Enter label">
+      <label for="customFieldValue">Field Value</label>
+      <input type="text" id="customFieldValue" placeholder="Enter value">
+      <button id="addFieldBtn">Add Field</button>
+    </div>
+
+    <button id="saveDataBtn">Save Data</button>
+    <button id="resetDataBtn">Reset Data</button>  <!-- Reset Button -->
     <script src="popup.js"></script>
-</body>
+  </body>
 </html>
