@@ -27,6 +27,7 @@
         border: none;
         width: 100%;
         cursor: pointer;
+        margin-bottom: 10px;
       }
       button:hover {
         background-color: #005d8c;
@@ -37,18 +38,19 @@
     <h3>LinkedIn Profile Editor</h3>
     <div id="profileFields"></div>
 
-    <!-- Add Custom Fields Section -->
-    <div id="addCustomFields">
-      <h4>Add Custom Field</h4>
-      <label for="customFieldLabel">Field Label</label>
-      <input type="text" id="customFieldLabel" placeholder="Enter label">
-      <label for="customFieldValue">Field Value</label>
-      <input type="text" id="customFieldValue" placeholder="Enter value">
-      <button id="addFieldBtn">Add Field</button>
+    <div id="customFieldSection">
+      <h4>Add New Field</h4>
+      <label for="customFieldLabel">Field Name:</label>
+      <input type="text" id="customFieldLabel" placeholder="Enter field name">
+      <label for="customFieldValue">Field Value:</label>
+      <input type="text" id="customFieldValue" placeholder="Enter field value">
+      <button id="addCustomFieldBtn">Add Field</button>
     </div>
 
     <button id="saveDataBtn">Save Data</button>
-    <button id="resetDataBtn">Reset Data</button>  <!-- Reset Button -->
+    <button id="resetNonSkillsBtn">Reset Non-Skills Data</button>
+    <a href="skills.html" id="skillsPageLink">Manage Skills</a>
+
     <script src="popup.js"></script>
   </body>
 </html>
