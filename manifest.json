@@ -1,23 +1,27 @@
 {
-    "manifest_version": 2,
-    "name": "LinkedIn Profile Editor",
-    "description": "A Chrome extension for saving and editing LinkedIn profile data",
-    "version": "1.0",
-    "author": "@yourname",
-    "permissions": [
-      "tabs",
-      "storage",
-      "https://www.linkedin.com/*"
-    ],
-    "browser_action": {
-      "default_icon": "logo.png",
-      "default_popup": "popup.html"
-    },
-    "content_scripts": [
-      {
-        "matches": ["https://www.linkedin.com/*"],
-        "js": ["payload.js"]
-      }
-    ]
-  }
-  
+  "manifest_version": 2,
+  "name": "LinkedIn Profile Editor",
+  "description": "A Chrome extension for saving and editing LinkedIn profile data",
+  "version": "1.1",
+  "author": "@yourname",
+  "permissions": [
+    "tabs",
+    "storage",
+    "https://www.linkedin.com/*"
+  ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "browser_action": {
+    "default_icon": "logo.png",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/*"],
+      "js": ["payload_non_skills.js", "payload_skills.js"]
+    }
+  ],
+  "web_accessible_resources": ["skills.html", "skills.js"]
+}
