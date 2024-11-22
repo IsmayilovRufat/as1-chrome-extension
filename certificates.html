@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Manage Certificates</title>
+    <meta charset="UTF-8">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 10px;
+        width: 300px;
+      }
+      textarea {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+      }
+      button {
+        background-color: #0073b1;
+        color: white;
+        padding: 10px;
+        border: none;
+        width: 100%;
+        cursor: pointer;
+        margin-bottom: 10px;
+      }
+      button:hover {
+        background-color: #005d8c;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>Manage Certificates</h3>
+    <textarea id="certificatesTextarea" rows="5" placeholder="Certificates will be loaded here..."></textarea>
+    <button id="refreshCertificatesBtn">Refresh Certificates</button>
+    <button id="saveCertificatesBtn">Save Certificates</button>
+
+    <script src="certificates.js"></script>
+  </body>
+</html>
