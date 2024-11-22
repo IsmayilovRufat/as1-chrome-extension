@@ -14,5 +14,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       sendResponse({ status: 'success', data: result.profileData || {} });
     });
     return true; // Keep the message channel open
+  } else if (message.type === 'certificatesData') {
+    chrome.storage.local.get('profileData', (result) => {
+      const currentData = result.profileData || {};
+      currentData.certificates = message.data;
+
+      chrome.storage.local.set({ profileData: currentData }, () => {
+        sendResponse({ status: 'success', message: 'Certificates data saved.' });
+      });
+    });
+    return true; // Keep the message channel open
   }
 });

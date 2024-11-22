@@ -18,10 +18,10 @@
     "default_popup": "popup.html"
   },
   "content_scripts": [
-    {
-      "matches": ["https://www.linkedin.com/*"],
-      "js": ["payload_non_skills.js", "payload_skills.js"]
-    }
-  ],
-  "web_accessible_resources": ["skills.html", "skills.js"]
+  {
+    "matches": ["https://www.linkedin.com/*"],
+    "js": ["payload_non_skills.js", "payload_skills.js", "payload_certificate.js"]
+  }
+],
+  "web_accessible_resources": ["skills.html", "skills.js", "certificates.html", "certificates.js"]
 }
