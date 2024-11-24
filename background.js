@@ -34,5 +34,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
     });
     return true; // Keep the message channel open
+  } else if (message.type === 'educationData') {
+    chrome.storage.local.get('profileData', (result) => {
+      const currentData = result.profileData || {};
+      currentData.education = message.data;
+  
+      chrome.storage.local.set({ profileData: currentData }, () => {
+        sendResponse({ status: 'success', message: 'Education data saved.' });
+      });
+    });
+    return true; // Keep the message channel open
   }
 });
