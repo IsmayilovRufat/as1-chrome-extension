@@ -6,7 +6,7 @@
       body {
         font-family: Arial, sans-serif;
         padding: 10px;
-        width: 300px;
+        width: 400px;
       }
       .editable {
         margin-bottom: 10px;
@@ -16,7 +16,7 @@
         display: block;
       }
       input {
-        width: 100%;
+        width: 70%;
         padding: 8px;
         margin-top: 5px;
       }
@@ -49,6 +49,15 @@
 
     <button id="saveDataBtn">Save Data</button>
     <button id="resetNonSkillsBtn">Reset Non-Skills Data</button>
+
+    <div id="dataTransferSection">
+      <h4>Data Transfer</h4>
+      <button id="exportDataBtn">Export Data</button>
+      <input type="file" id="importDataFile" style="display: none;">
+      <button id="importDataBtn">Import Data</button>
+      <button id="sendDataEmailBtn">Send Data via Email</button>
+    </div>    
+
     <a href="skills.html" id="skillsPageLink">Manage Skills</a>
     <br>
     <a href="certificates.html" id="certificatesPageLink">Manage Certificates</a>
@@ -56,6 +65,9 @@
     <a href="experiences.html" id="experiencesPageLink">Manage Experiences</a>
     <br>
     <a href="education.html" id="educationPageLink">Manage Education</a>
+    <br>
+    <a href="languages.html" id="languagesPageLink">Manage Languages</a>
+
 
     <script src="popup.js"></script>
   </body>

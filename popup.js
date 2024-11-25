@@ -100,9 +100,64 @@ function saveData() {
   });
 }
 
+function exportData() {
+  chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
+    const data = response.data || {};
+    const jsonString = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'profile_data.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+function importData() {
+  const fileInput = document.getElementById('importDataFile');
+  fileInput.click(); // Open the file dialog
+
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      try {
+        const importedData = JSON.parse(reader.result);
+
+        // Send the data to the background script to save it
+        chrome.runtime.sendMessage({ type: 'profileData', data: importedData }, (response) => {
+          if (response.status === 'success') {
+            alert('Data imported successfully!');
+          } else {
+            alert('Failed to save imported data.');
+          }
+        });
+      } catch (e) {
+        alert('Invalid file format.');
+      }
+    };
+
+    reader.readAsText(file);
+  });
+}
+
+
+function sendDataViaEmail() {
+  chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
+    const data = response.data || {};
+    const emailBody = encodeURIComponent("Here is the exported data:\n" + JSON.stringify(data, null, 2));
+    window.open(`mailto:?subject=Exported Profile Data&body=${emailBody}`);
+  });
+}
+
 window.addEventListener('load', () => {
   document.getElementById('saveDataBtn').addEventListener('click', saveData);
   document.getElementById('resetNonSkillsBtn').addEventListener('click', resetNonSkillsData);
   document.getElementById('addCustomFieldBtn').addEventListener('click', addCustomField);
+  document.getElementById('exportDataBtn').addEventListener('click', exportData);
+  document.getElementById('importDataBtn').addEventListener('click', importData);
+  document.getElementById('sendDataEmailBtn').addEventListener('click', sendDataViaEmail);
   loadFields();
 });
