@@ -44,5 +44,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
     });
     return true; // Keep the message channel open
+  } else if (message.type === 'languagesData') {
+    chrome.storage.local.get('profileData', (result) => {
+      const currentData = result.profileData || {};
+      currentData.languages = message.data;
+  
+      chrome.storage.local.set({ profileData: currentData }, () => {
+        sendResponse({ status: 'success', message: 'Languages data saved.' });
+      });
+    });
+    return true; // Keep the message channel open
   }
+  
+  
 });

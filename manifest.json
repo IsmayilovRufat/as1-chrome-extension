@@ -7,7 +7,8 @@
   "permissions": [
     "tabs",
     "storage",
-    "https://www.linkedin.com/*"
+    "https://www.linkedin.com/*",
+    "chrome-extension://*"
   ],
   "background": {
     "scripts": ["background.js"],
@@ -20,8 +21,8 @@
   "content_scripts": [
   {
     "matches": ["https://www.linkedin.com/*"],
-    "js": ["payload_non_skills.js", "payload_skills.js", "payload_certificate.js"]
+    "js": ["payload_non_skills.js", "payload_skills.js", "payload_certificate.js", "payload_education.js", "payload_language.js"]
   }
 ],
-  "web_accessible_resources": ["skills.html", "skills.js", "certificates.html", "certificates.js"]
+  "web_accessible_resources": ["skills.html", "skills.js", "certificates.html", "certificates.js", "experiences.html", "experiences.js", "education.html", "education.js", "languages.html", "languages.js"]
 }

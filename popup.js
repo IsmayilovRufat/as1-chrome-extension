@@ -125,11 +125,10 @@ function importData() {
     reader.onload = () => {
       try {
         const importedData = JSON.parse(reader.result);
-
-        // Send the data to the background script to save it
         chrome.runtime.sendMessage({ type: 'profileData', data: importedData }, (response) => {
-          if (response.status === 'success') {
+          if (response && response.status === 'success') {
             alert('Data imported successfully!');
+            loadFields(); // Refresh the fields
           } else {
             alert('Failed to save imported data.');
           }
