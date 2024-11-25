@@ -11,6 +11,12 @@
       .editable {
         margin-bottom: 10px;
       }
+      textarea {
+        width: 100%;
+        height: 100px;
+        margin-top: 10px;
+        padding: 5px;
+      }
       label {
         font-weight: bold;
         display: block;
@@ -32,32 +38,30 @@
       button:hover {
         background-color: #005d8c;
       }
+      #coverLetterOutput {
+        height: 150px;
+      }
     </style>
   </head>
   <body>
-    <h3>LinkedIn Profile Editor</h3>
-    <div id="profileFields"></div>
-
+    <h1>LinkedIn Profile Editor</h1>
+    <hr>
+    <br>
     <div id="customFieldSection">
-      <h4>Add New Field</h4>
+      <h3>Add New Field</h3>
       <label for="customFieldLabel">Field Name:</label>
       <input type="text" id="customFieldLabel" placeholder="Enter field name">
+      <br>
+      <br>
       <label for="customFieldValue">Field Value:</label>
       <input type="text" id="customFieldValue" placeholder="Enter field value">
+      <br>
+      <br>
       <button id="addCustomFieldBtn">Add Field</button>
     </div>
-
-    <button id="saveDataBtn">Save Data</button>
-    <button id="resetNonSkillsBtn">Reset Non-Skills Data</button>
-
-    <div id="dataTransferSection">
-      <h4>Data Transfer</h4>
-      <button id="exportDataBtn">Export Data</button>
-      <input type="file" id="importDataFile" style="display: none;">
-      <button id="importDataBtn">Import Data</button>
-      <button id="sendDataEmailBtn">Send Data via Email</button>
-    </div>    
-
+    <br>
+    <br>
+    <hr>
     <a href="skills.html" id="skillsPageLink">Manage Skills</a>
     <br>
     <a href="certificates.html" id="certificatesPageLink">Manage Certificates</a>
@@ -67,8 +71,28 @@
     <a href="education.html" id="educationPageLink">Manage Education</a>
     <br>
     <a href="languages.html" id="languagesPageLink">Manage Languages</a>
-
-
+    <br>
+    <a href="profileFields.html" id="profileFieldsPageLink">Manage Profile Info</a>
+    <br>
+    <a href="added_fields.html" id="addedFieldsPageLink">Manage Added Fields</a> <!-- New Link -->
+    <br>
+    <br>
+    <hr>
+    <h1>Cover Letter Generator</h1>
+    <textarea id="htmlInput" placeholder="Paste the HTML content of the job listing here..." style="display: none;"></textarea>
+    <br>
+    <button id="generateBtn">Generate Cover Letter</button>
+    <textarea id="coverLetterOutput" placeholder="Your cover letter will appear here..." readonly></textarea>
+    <br>
+    <br>
+    <hr>
+    <div id="dataTransferSection">
+      <h4>Data Transfer</h4>
+      <button id="exportDataBtn">Export Data</button>
+      <input type="file" id="importDataFile" style="display: none;">
+      <button id="importDataBtn">Import Data</button>
+      <button id="sendEmailButton">Send Profile Data via Email</button>
+    </div>
     <script src="popup.js"></script>
   </body>
 </html>

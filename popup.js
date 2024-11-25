@@ -2,39 +2,13 @@ function loadFields() {
   const profileFieldsDiv = document.getElementById('profileFields');
   profileFieldsDiv.innerHTML = '';
 
+  // Fetch the profile data
   chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
     const storedData = response.data || {};
 
-    const defaultFields = [
-      { key: 'name', label: 'Name' },
-      { key: 'title', label: 'Title' },
-      { key: 'location', label: 'Location' },
-      { key: 'email', label: 'Email' },
-      { key: 'website', label: 'Website' },
-      { key: 'phone', label: 'Phone' },
-      { key: 'bio', label: 'Bio' },
-      { key: 'birthday', label: 'Birthday' }
-    ];
-
-    defaultFields.forEach((field) => {
-      const fieldDiv = document.createElement('div');
-      fieldDiv.classList.add('editable');
-
-      const label = document.createElement('label');
-      label.textContent = `${field.label}:`;
-
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.value = storedData[field.key] || '';
-      input.dataset.fieldKey = field.key;
-
-      fieldDiv.appendChild(label);
-      fieldDiv.appendChild(input);
-      profileFieldsDiv.appendChild(fieldDiv);
-    });
-
-    // Add custom fields
+    // Only handle the custom fields
     const customFields = storedData.customFields || [];
+
     customFields.forEach((field) => {
       const fieldDiv = document.createElement('div');
       fieldDiv.classList.add('editable');
@@ -53,6 +27,59 @@ function loadFields() {
     });
   });
 }
+
+
+
+document.getElementById('generateBtn').addEventListener('click', () => {
+  // Get the pasted HTML content
+  const htmlInput = document.getElementById('htmlInput').value;
+
+  if (!htmlInput.trim()) {
+    // Alert the user if no HTML is provided
+    document.getElementById('coverLetterOutput').value = 'Please provide the HTML content to generate the cover letter.';
+    return;
+  }
+
+  // Send the HTML content to the background script
+  chrome.runtime.sendMessage(
+    { type: 'generateCoverLetter', htmlStructure: htmlInput },
+    (response) => {
+      const outputField = document.getElementById('coverLetterOutput');
+      if (response.status === 'success') {
+        // Display the generated cover letter
+        outputField.value = response.coverLetter;
+      } else {
+        // Display error messages
+        outputField.value = `Error: ${response.message}`;
+      }
+    }
+  );
+});
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  const htmlInput = document.getElementById('htmlInput'); // Match the ID from popup.html
+
+  // Query the active tab
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const activeTab = tabs[0];
+
+      // Send a message to the content script to fetch page content
+      chrome.tabs.sendMessage(activeTab.id, { type: 'fetchPageContent' }, (response) => {
+          if (response && response.status === 'success') {
+              // Set the content in the textarea
+              htmlInput.value = response.content;
+          } else {
+              htmlInput.value = 'Failed to fetch page content.';
+          }
+      });
+  });
+});
+
+
+
+
 
 function addCustomField() {
   const labelInput = document.getElementById('customFieldLabel');
@@ -81,24 +108,8 @@ function addCustomField() {
   }
 }
 
-function resetNonSkillsData() {
-  chrome.tabs.executeScript(null, { file: 'payload_non_skills.js' }, () => {
-    alert('Non-skills data has been reset and reloaded!');
-    loadFields();
-  });
-}
 
-function saveData() {
-  const storedData = {};
-  const inputs = document.querySelectorAll('input');
-  inputs.forEach((input) => {
-    storedData[input.dataset.fieldKey] = input.value.trim();
-  });
 
-  chrome.runtime.sendMessage({ type: 'profileData', data: storedData }, () => {
-    alert('Profile data saved successfully!');
-  });
-}
 
 function exportData() {
   chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
@@ -146,17 +157,33 @@ function importData() {
 function sendDataViaEmail() {
   chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
     const data = response.data || {};
-    const emailBody = encodeURIComponent("Here is the exported data:\n" + JSON.stringify(data, null, 2));
-    window.open(`mailto:?subject=Exported Profile Data&body=${emailBody}`);
+
+    // Prepare the body content of the email
+    const emailBody = encodeURIComponent("Here is the exported profile data:\n" + JSON.stringify(data, null, 2));
+
+    // Create the mailto link with subject and body
+    const mailtoLink = `mailto:?subject=Exported Profile Data&body=${emailBody}`;
+
+    // Open the mailto link in a new tab or window
+    const mailtoWindow = window.open(mailtoLink, '_blank');
+
+    // Check if the window was successfully opened
+    if (!mailtoWindow) {
+      alert("Unable to open email client. Please check your browser settings.");
+    }
   });
 }
 
+
+
+
 window.addEventListener('load', () => {
-  document.getElementById('saveDataBtn').addEventListener('click', saveData);
-  document.getElementById('resetNonSkillsBtn').addEventListener('click', resetNonSkillsData);
+
   document.getElementById('addCustomFieldBtn').addEventListener('click', addCustomField);
+
   document.getElementById('exportDataBtn').addEventListener('click', exportData);
   document.getElementById('importDataBtn').addEventListener('click', importData);
-  document.getElementById('sendDataEmailBtn').addEventListener('click', sendDataViaEmail);
+  document.getElementById('sendEmailButton').addEventListener('click', sendDataViaEmail);
+
   loadFields();
 });

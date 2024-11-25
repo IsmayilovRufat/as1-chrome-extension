@@ -1,60 +1,74 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === 'profileData') {
-    chrome.storage.local.get('profileData', (result) => {
-      const currentData = result.profileData || {};
-      const updatedData = { ...currentData, ...message.data };
+  if (message.type === 'fetchPageContent') {
+    // Existing fetchPageContent logic
+  }
 
-      chrome.storage.local.set({ profileData: updatedData }, () => {
-        sendResponse({ status: 'success', message: 'Profile data saved.' });
-      });
-    });
-    return true; // Keep the message channel open
-  } else if (message.type === 'getProfileData') {
+  if (message.type === 'getProfileData') {
     chrome.storage.local.get('profileData', (result) => {
       sendResponse({ status: 'success', data: result.profileData || {} });
     });
-    return true; // Keep the message channel open
-  } else if (message.type === 'certificatesData') {
-    chrome.storage.local.get('profileData', (result) => {
-      const currentData = result.profileData || {};
-      currentData.certificates = message.data;
-
-      chrome.storage.local.set({ profileData: currentData }, () => {
-        sendResponse({ status: 'success', message: 'Certificates data saved.' });
-      });
-    });
-    return true; // Keep the message channel open
-  } else if (message.type === 'experiencesData') {
-    chrome.storage.local.get('profileData', (result) => {
-      const currentData = result.profileData || {};
-      currentData.experiences = message.data;
-  
-      chrome.storage.local.set({ profileData: currentData }, () => {
-        sendResponse({ status: 'success', message: 'Experiences data saved.' });
-      });
-    });
-    return true; // Keep the message channel open
-  } else if (message.type === 'educationData') {
-    chrome.storage.local.get('profileData', (result) => {
-      const currentData = result.profileData || {};
-      currentData.education = message.data;
-  
-      chrome.storage.local.set({ profileData: currentData }, () => {
-        sendResponse({ status: 'success', message: 'Education data saved.' });
-      });
-    });
-    return true; // Keep the message channel open
-  } else if (message.type === 'languagesData') {
-    chrome.storage.local.get('profileData', (result) => {
-      const currentData = result.profileData || {};
-      currentData.languages = message.data;
-  
-      chrome.storage.local.set({ profileData: currentData }, () => {
-        sendResponse({ status: 'success', message: 'Languages data saved.' });
-      });
-    });
-    return true; // Keep the message channel open
+    return true; // Keeps the message channel open for async response
   }
-  
-  
+
+  if (message.type === 'sendProfileDataViaEmail') {
+    chrome.storage.local.get('profileData', (result) => {
+      const profileData = result.profileData || {};
+
+      // Example: Convert profile data to a string for the email body
+      const emailBody = Object.keys(profileData)
+        .map(field => `${field}: ${profileData[field]}`)
+        .join('\n');
+
+      // Construct mailto URL
+      const mailtoUrl = `mailto:?subject=Profile Data&body=${encodeURIComponent(emailBody)}`;
+      
+      // Open the default mail client
+      window.open(mailtoUrl);
+
+      sendResponse({ status: 'success', message: 'Email sent successfully.' });
+    });
+    return true; // Keeps the message channel open for async response
+  }
+
+  // Handle profile data management messages
+  const handleProfileData = (field, data) => {
+    chrome.storage.local.get('profileData', (result) => {
+      const currentData = result.profileData || {};
+      if (field) {
+        currentData[field] = data;
+      } else {
+        Object.assign(currentData, data);
+      }
+      chrome.storage.local.set({ profileData: currentData }, () => {
+        sendResponse({ status: 'success', message: `${field || 'Profile'} data saved.` });
+      });
+    });
+  };
+
+  switch (message.type) {
+    case 'profileData':
+      handleProfileData(null, message.data);
+      return true;
+
+    case 'certificatesData':
+      handleProfileData('certificates', message.data);
+      return true;
+
+    case 'experiencesData':
+      handleProfileData('experiences', message.data);
+      return true;
+
+    case 'educationData':
+      handleProfileData('education', message.data);
+      return true;
+
+    case 'languagesData':
+      handleProfileData('languages', message.data);
+      return true;
+
+    default:
+      console.warn('Unknown message type:', message.type);
+      sendResponse({ status: 'error', message: 'Unknown message type.' });
+      return false; // Close the message channel
+  }
 });
