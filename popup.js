@@ -2,12 +2,23 @@ function loadFields() {
   const profileFieldsDiv = document.getElementById('profileFields');
   profileFieldsDiv.innerHTML = '';
 
+<<<<<<< HEAD
   // Fetch the profile data
   chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
     const storedData = response.data || {};
 
     // Only handle the custom fields
     const customFields = storedData.customFields || [];
+=======
+  // Fetch the profile data for the selected profile
+  const selectedProfile = document.getElementById('profile-selector').value;
+  chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
+    const storedData = response.data || {};
+    const profileData = storedData[selectedProfile] || { customFields: [] };
+
+    // Only handle the custom fields
+    const customFields = profileData.customFields || [];
+>>>>>>> 3a3d6f0 (Initial versions of Profile Switching and Form Mapping)
 
     customFields.forEach((field) => {
       const fieldDiv = document.createElement('div');
@@ -28,6 +39,7 @@ function loadFields() {
   });
 }
 
+<<<<<<< HEAD
 
 
 document.getElementById('generateBtn').addEventListener('click', () => {
@@ -80,6 +92,73 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+=======
+function loadProfiles() {
+  const profileSelector = document.getElementById('profile-selector');
+  profileSelector.innerHTML = ''; // Clear existing options
+
+  chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
+    if (chrome.runtime.lastError) {
+      console.error('Error fetching profile data:', chrome.runtime.lastError.message);
+      return;
+    }
+
+    if (response && response.status === 'success') {
+      const profiles = response.data || {};
+      Object.keys(profiles).forEach((profileName) => {
+        const option = document.createElement('option');
+        option.value = profileName;
+        option.textContent = profileName;
+        profileSelector.appendChild(option);
+      });
+
+      if (Object.keys(profiles).length > 0) {
+        profileSelector.value = Object.keys(profiles)[0];
+        loadFields(profiles[profileSelector.value]); // Load fields for the first profile
+      }
+    } else {
+      console.error('Failed to load profiles:', response);
+    }
+  });
+}
+
+function addProfile() {
+  const profileNameInput = document.getElementById('new-profile-name');
+  const profileName = profileNameInput.value.trim();
+
+  if (!profileName) {
+    alert('Profile name cannot be empty!');
+    return;
+  }
+
+  chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
+    if (chrome.runtime.lastError) {
+      console.error('Error fetching profile data:', chrome.runtime.lastError.message);
+      return;
+    }
+
+    const profiles = response.data || {};
+    if (profiles[profileName]) {
+      alert('Profile name already exists!');
+      return;
+    }
+
+    profiles[profileName] = { customFields: [] };
+
+    chrome.runtime.sendMessage({ type: 'profileData', data: profiles }, (saveResponse) => {
+      if (saveResponse && saveResponse.status === 'success') {
+        alert('Profile added successfully!');
+        console.log('Updated profiles:', profiles);
+        profileNameInput.value = '';
+        document.getElementById('new-profile-modal').style.display = 'none';
+        loadProfiles(); // Refresh dropdown
+      } else {
+        console.error('Failed to save profile:', saveResponse);
+      }
+    });
+  });
+}
+>>>>>>> 3a3d6f0 (Initial versions of Profile Switching and Form Mapping)
 
 function addCustomField() {
   const labelInput = document.getElementById('customFieldLabel');
@@ -87,6 +166,7 @@ function addCustomField() {
 
   const label = labelInput.value.trim();
   const value = valueInput.value.trim();
+<<<<<<< HEAD
 
   if (label && value) {
     chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
@@ -97,6 +177,19 @@ function addCustomField() {
       storedData.customFields = customFields;
 
       chrome.runtime.sendMessage({ type: 'profileData', data: storedData }, () => {
+=======
+  const selectedProfile = document.getElementById('profile-selector').value;
+
+  if (label && value) {
+    chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
+      const profiles = response.data || {};
+      const profileData = profiles[selectedProfile] || { customFields: [] };
+
+      profileData.customFields.push({ label, value });
+      profiles[selectedProfile] = profileData;
+
+      chrome.runtime.sendMessage({ type: 'profileData', data: profiles }, () => {
+>>>>>>> 3a3d6f0 (Initial versions of Profile Switching and Form Mapping)
         alert('Custom field added successfully!');
         labelInput.value = '';
         valueInput.value = '';
@@ -108,6 +201,7 @@ function addCustomField() {
   }
 }
 
+<<<<<<< HEAD
 
 
 
@@ -187,3 +281,64 @@ window.addEventListener('load', () => {
 
   loadFields();
 });
+=======
+function submitApplicationForm() {
+  const applicationData = {
+    fullName: document.getElementById('fullName').value,
+    emailAddress: document.getElementById('emailAddress').value,
+    phoneNumber: document.getElementById('phoneNumber').value,
+    address: document.getElementById('address').value,
+    desiredSalary: {
+      amount: document.getElementById('desiredSalary').value,
+      currency: document.getElementById('currency').value,
+      type: document.getElementById('salaryType').value,
+    },
+    coverLetter: document.getElementById('coverLetter').value,
+  };
+
+  // Save application data to chrome.storage.local
+  chrome.storage.local.set({ applicationData }, () => {
+    console.log('Application data saved:', applicationData);
+    alert('Application submitted successfully!');
+  });
+}
+
+function loadApplicationData() {
+  chrome.storage.local.get('applicationData', (result) => {
+    const applicationData = result.applicationData || {};
+
+    if (applicationData.fullName) document.getElementById('fullName').value = applicationData.fullName;
+    if (applicationData.emailAddress) document.getElementById('emailAddress').value = applicationData.emailAddress;
+    if (applicationData.phoneNumber) document.getElementById('phoneNumber').value = applicationData.phoneNumber;
+    if (applicationData.address) document.getElementById('address').value = applicationData.address;
+    if (applicationData.desiredSalary) {
+      document.getElementById('desiredSalary').value = applicationData.desiredSalary.amount;
+      document.getElementById('currency').value = applicationData.desiredSalary.currency;
+      document.getElementById('salaryType').value = applicationData.desiredSalary.type;
+    }
+    if (applicationData.coverLetter) document.getElementById('coverLetter').value = applicationData.coverLetter;
+  });
+}
+
+window.addEventListener('load', () => {
+  document.getElementById('addCustomFieldBtn').addEventListener('click', addCustomField);
+
+  document.getElementById('new-profile-btn').addEventListener('click', () => {
+    document.getElementById('new-profile-modal').style.display = 'block';
+  });
+
+  document.getElementById('cancel-profile-btn').addEventListener('click', () => {
+    document.getElementById('new-profile-modal').style.display = 'none';
+  });
+
+  document.getElementById('save-profile-btn').addEventListener('click', addProfile);
+
+  document.getElementById('submitApplication').addEventListener('click', (event) => {
+    event.preventDefault(); // Prevent form reload
+    submitApplicationForm();
+  });
+
+  loadProfiles();
+  loadApplicationData();
+});
+>>>>>>> 3a3d6f0 (Initial versions of Profile Switching and Form Mapping)

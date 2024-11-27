@@ -8,6 +8,7 @@
         padding: 10px;
         width: 400px;
       }
+<<<<<<< HEAD
       .editable {
         margin-bottom: 10px;
       }
@@ -26,11 +27,39 @@
         padding: 8px;
         margin-top: 5px;
       }
+=======
+
+      h1, h3 {
+        font-size: 18px;
+        margin-bottom: 10px;
+      }
+
+      label {
+        font-weight: bold;
+        margin: 10px 0 5px;
+        display: block;
+      }
+
+      input, select, textarea {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+
+      textarea {
+        height: 100px;
+      }
+
+>>>>>>> 3a3d6f0 (Initial versions of Profile Switching and Form Mapping)
       button {
         background-color: #0073b1;
         color: white;
         padding: 10px;
         border: none;
+<<<<<<< HEAD
         width: 100%;
         cursor: pointer;
         margin-bottom: 10px;
@@ -41,10 +70,53 @@
       #coverLetterOutput {
         height: 150px;
       }
+=======
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        font-size: 16px;
+        margin-top: 10px;
+      }
+
+      button:hover {
+        background-color: #005d8c;
+      }
+
+      .section {
+        margin-bottom: 20px;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 10px;
+      }
+
+      .form-row input, .form-row select {
+        flex: 1;
+      }
+
+      #coverLetterOutput {
+        height: 150px;
+      }
+
+      #new-profile-modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+      }
+>>>>>>> 3a3d6f0 (Initial versions of Profile Switching and Form Mapping)
     </style>
   </head>
   <body>
     <h1>LinkedIn Profile Editor</h1>
+<<<<<<< HEAD
     <hr>
     <br>
     <div id="customFieldSection">
@@ -93,6 +165,93 @@
       <button id="importDataBtn">Import Data</button>
       <button id="sendEmailButton">Send Profile Data via Email</button>
     </div>
+=======
+
+    <div id="profileSwitchingSection" class="section">
+      <h3>Profiles</h3>
+      <label for="profile-selector">Select Profile:</label>
+      <select id="profile-selector">
+        <!-- Profiles will be dynamically added here -->
+      </select>
+      <button id="new-profile-btn">New Profile</button>
+    </div>
+
+    <div id="new-profile-modal">
+      <h3>Create New Profile</h3>
+      <label for="new-profile-name">Profile Name:</label>
+      <input type="text" id="new-profile-name" placeholder="Enter profile name" />
+      <button id="save-profile-btn">Save Profile</button>
+      <button id="cancel-profile-btn">Cancel</button>
+    </div>
+    
+
+    <hr>
+
+    <div id="customFieldSection" class="section">
+      <h3>Add New Field</h3>
+      <label for="customFieldLabel">Field Name:</label>
+      <input type="text" id="customFieldLabel" placeholder="Enter field name">
+      <label for="customFieldValue">Field Value:</label>
+      <input type="text" id="customFieldValue" placeholder="Enter field value">
+      <button id="addCustomFieldBtn">Add Field</button>
+    </div>
+
+    <hr>
+
+    <div id="applicationForm" class="section">
+      <h3>Job Application Form</h3>
+      <!-- Full Name -->
+      <label for="fullName">Full Name *</label>
+      <input type="text" id="fullName" placeholder="Full Name" required>
+
+      <!-- Email Address -->
+      <label for="emailAddress">Email Address *</label>
+      <input type="email" id="emailAddress" placeholder="Email Address" required>
+
+      <!-- Phone Number -->
+      <label for="phoneNumber">Phone Number *</label>
+      <input type="tel" id="phoneNumber" placeholder="Phone Number" required>
+
+      <!-- Address -->
+      <label for="address">Address *</label>
+      <input type="text" id="address" placeholder="Address" required>
+
+      <!-- Desired Salary -->
+      <label for="desiredSalary">Desired Salary</label>
+      <div class="form-row">
+        <select id="currency">
+          <option value="AZN">AZN</option>
+          <option value="USD">USD</option>
+        </select>
+        <input type="number" id="desiredSalary" placeholder="Desired Salary">
+        <select id="salaryType">
+          <option value="Yearly">Yearly</option>
+          <option value="Monthly">Monthly</option>
+          <option value="Hourly">Hourly</option>
+        </select>
+      </div>
+
+      <!-- Cover Letter -->
+      <label for="coverLetter">Cover Letter</label>
+      <textarea id="coverLetter" placeholder="Your cover letter..."></textarea>
+
+      <!-- Submit Button -->
+      <button id="submitApplication" type="submit">Submit Application</button>
+    </div>
+
+    <hr>
+
+    <nav class="section">
+      <a href="skills.html" id="skillsPageLink">Manage Skills</a><br>
+      <a href="certificates.html" id="certificatesPageLink">Manage Certificates</a><br>
+      <a href="experiences.html" id="experiencesPageLink">Manage Experiences</a><br>
+      <a href="education.html" id="educationPageLink">Manage Education</a><br>
+      <a href="languages.html" id="languagesPageLink">Manage Languages</a><br>
+      <a href="profileFields.html" id="profileFieldsPageLink">Manage Profile Info</a><br>
+      <a href="added_fields.html" id="addedFieldsPageLink">Manage Added Fields</a><br>
+    </nav>
+
+>>>>>>> 3a3d6f0 (Initial versions of Profile Switching and Form Mapping)
     <script src="popup.js"></script>
   </body>
 </html>
