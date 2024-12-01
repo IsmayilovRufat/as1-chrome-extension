@@ -1,115 +1,289 @@
 function loadFields() {
-  const profileFieldsDiv = document.getElementById('profileFields');
-  profileFieldsDiv.innerHTML = '';
+  const selectedProfile = localStorage.getItem("selectedProfile");
+  if (!selectedProfile) {
+    console.error("No profile selected.");
+    return;
+  }
 
-  // Fetch the profile data
-  chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
-    const storedData = response.data || {};
+  chrome.runtime.sendMessage(
+    { type: "getProfileData", profileName: selectedProfile },
+    (response) => {
+      if (chrome.runtime.lastError) {
+        console.error("Error fetching profile data:", chrome.runtime.lastError.message);
+        return;
+      }
 
-    // Only handle the custom fields
-    const customFields = storedData.customFields || [];
+      const profileData = response?.data || {};
+      console.log(`Loaded data for profile "${selectedProfile}":`, profileData);
 
-    customFields.forEach((field) => {
-      const fieldDiv = document.createElement('div');
-      fieldDiv.classList.add('editable');
+      // Populate the fields with the profile data
+      document.getElementById("skillsTextarea").value = (profileData.skills || []).join(", ");
+      document.getElementById("certificatesTextarea").value = (profileData.certificates || []).join(", ");
+      document.getElementById("experiencesTextarea").value = (profileData.experiences || []).join(", ");
+      document.getElementById("educationTextarea").value = (profileData.education || []).join(", ");
+      document.getElementById("languagesTextarea").value = (profileData.languages || []).join(", ");
+      document.getElementById("titleInput").value = profileData.title || "";
+      document.getElementById("locationInput").value = profileData.location || "";
+      document.getElementById("bioTextarea").value = profileData.bio || "";
+    }
+  );
+}
 
-      const label = document.createElement('label');
-      label.textContent = `${field.label}:`;
+function populateFormFields(profileData) {
+  // Populate the Skills Textarea
+  const skillsTextarea = document.getElementById("skillsTextarea");
+  if (skillsTextarea) {
+    skillsTextarea.value = (profileData.skills || []).join(", ");
+  }
 
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.value = field.value;
-      input.dataset.fieldKey = `custom_${field.label}`;
+  // Populate the Certificates Textarea
+  const certificatesTextarea = document.getElementById("certificatesTextarea");
+  if (certificatesTextarea) {
+    certificatesTextarea.value = (profileData.certificates || []).join(", ");
+  }
 
-      fieldDiv.appendChild(label);
-      fieldDiv.appendChild(input);
-      profileFieldsDiv.appendChild(fieldDiv);
+  // Populate the Experiences Textarea
+  const experiencesTextarea = document.getElementById("experiencesTextarea");
+  if (experiencesTextarea) {
+    experiencesTextarea.value = (profileData.experiences || []).join(", ");
+  }
+
+  // Populate the Education Textarea
+  const educationTextarea = document.getElementById("educationTextarea");
+  if (educationTextarea) {
+    educationTextarea.value = (profileData.education || []).join(", ");
+  }
+
+  // Populate the Languages Textarea
+  const languagesTextarea = document.getElementById("languagesTextarea");
+  if (languagesTextarea) {
+    languagesTextarea.value = (profileData.languages || []).join(", ");
+  }
+
+  // Populate Title, Location, and Bio fields
+  const titleInput = document.getElementById("titleInput");
+  if (titleInput) {
+    titleInput.value = profileData.title || "";
+  }
+
+  const locationInput = document.getElementById("locationInput");
+  if (locationInput) {
+    locationInput.value = profileData.location || "";
+  }
+
+  const bioTextarea = document.getElementById("bioTextarea");
+  if (bioTextarea) {
+    bioTextarea.value = profileData.bio || "";
+  }
+}
+
+// Function to load profiles into the dropdown
+function loadProfiles() {
+  const profileSelector = document.getElementById("profile-selector");
+  profileSelector.innerHTML = ""; // Clear existing options
+
+  chrome.runtime.sendMessage({ type: "getProfileData" }, (response) => {
+    if (chrome.runtime.lastError) {
+      console.error("Error fetching profile data:", chrome.runtime.lastError.message);
+      return;
+    }
+
+    if (response && response.status === "success") {
+      const profiles = response.data || {};
+      const userProfiles = Object.keys(profiles).filter(
+        (key) =>
+          ![
+            "certificates",
+            "education",
+            "experiences",
+            "languages",
+            "skills",
+            "bio",
+            "birthday",
+            "email",
+            "location",
+            "name",
+            "phone",
+            "title",
+            "website",
+          ].includes(key)
+      );
+
+      userProfiles.forEach((profileName) => {
+        const option = document.createElement("option");
+        option.value = profileName;
+        option.textContent = profileName;
+        profileSelector.appendChild(option);
+      });
+
+      // Select the first profile by default
+      if (userProfiles.length > 0) {
+        const defaultProfile = localStorage.getItem("selectedProfile") || userProfiles[0];
+        profileSelector.value = defaultProfile;
+        localStorage.setItem("selectedProfile", defaultProfile); // Ensure it's saved
+        loadFields(); // Load fields for the default profile
+      }
+    } else {
+      console.error("Failed to load profiles:", response);
+    }
+  });
+
+  profileSelector.addEventListener("change", (event) => {
+    const selectedProfile = event.target.value;
+    localStorage.setItem("selectedProfile", selectedProfile);
+    console.log(`Switched to profile: ${selectedProfile}`);
+    loadFields(); // Reload fields for the newly selected profile
+  });
+}
+
+// Add this code block to listen for profile changes
+document.getElementById("profile-selector").addEventListener("change", () => {
+  const selectedProfile = document.getElementById("profile-selector").value;
+
+  if (!selectedProfile) {
+    console.error("No profile selected.");
+    return;
+  }
+
+  localStorage.setItem("selectedProfile", selectedProfile); // Save the selected profile
+  console.log(`Switched to profile: ${selectedProfile}`);
+
+  // Clear the form fields
+  document.getElementById("skillsTextarea").value = "";
+  document.getElementById("certificatesTextarea").value = "";
+  document.getElementById("experiencesTextarea").value = "";
+  document.getElementById("educationTextarea").value = "";
+  document.getElementById("languagesTextarea").value = "";
+  document.getElementById("titleInput").value = "";
+  document.getElementById("locationInput").value = "";
+  document.getElementById("bioTextarea").value = "";
+
+  // Reload the form fields with data for the selected profile
+  loadFields();
+});
+
+
+
+function addProfile() {
+  const profileNameInput = document.getElementById("new-profile-name");
+  const profileName = profileNameInput.value.trim();
+
+  if (!profileName) {
+    alert("Profile name cannot be empty!");
+    return;
+  }
+
+  chrome.runtime.sendMessage({ type: "getProfileData" }, (response) => {
+    if (chrome.runtime.lastError) {
+      console.error("Error fetching profile data:", chrome.runtime.lastError.message);
+      return;
+    }
+
+    const profiles = response.data || {};
+    if (profiles[profileName]) {
+      alert("Profile name already exists!");
+      return;
+    }
+
+    profiles[profileName] = {
+      skills: [],
+      certificates: [],
+      experiences: [],
+      education: [],
+      languages: [],
+      title: "",
+      location: "",
+      bio: "",
+    };
+
+    chrome.runtime.sendMessage({ type: "profileData", data: profiles }, (saveResponse) => {
+      if (saveResponse && saveResponse.status === "success") {
+        alert("Profile added successfully!");
+        console.log("Updated profiles:", profiles);
+        profileNameInput.value = "";
+        document.getElementById("new-profile-modal").style.display = "none";
+        loadProfiles(); // Refresh dropdown
+      } else {
+        console.error("Failed to save profile:", saveResponse);
+      }
     });
   });
 }
 
-
-
-document.getElementById('generateBtn').addEventListener('click', () => {
-  // Get the pasted HTML content
-  const htmlInput = document.getElementById('htmlInput').value;
-
-  if (!htmlInput.trim()) {
-    // Alert the user if no HTML is provided
-    document.getElementById('coverLetterOutput').value = 'Please provide the HTML content to generate the cover letter.';
-    return;
-  }
-
-  // Send the HTML content to the background script
-  chrome.runtime.sendMessage(
-    { type: 'generateCoverLetter', htmlStructure: htmlInput },
-    (response) => {
-      const outputField = document.getElementById('coverLetterOutput');
-      if (response.status === 'success') {
-        // Display the generated cover letter
-        outputField.value = response.coverLetter;
-      } else {
-        // Display error messages
-        outputField.value = `Error: ${response.message}`;
-      }
-    }
-  );
-});
-
-
-
-document.addEventListener('DOMContentLoaded', () => {
-  const htmlInput = document.getElementById('htmlInput'); // Match the ID from popup.html
-
-  // Query the active tab
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const activeTab = tabs[0];
-
-      // Send a message to the content script to fetch page content
-      chrome.tabs.sendMessage(activeTab.id, { type: 'fetchPageContent' }, (response) => {
-          if (response && response.status === 'success') {
-              // Set the content in the textarea
-              htmlInput.value = response.content;
-          } else {
-              htmlInput.value = 'Failed to fetch page content.';
-          }
-      });
-  });
-});
-
-
-
-
-
 function addCustomField() {
-  const labelInput = document.getElementById('customFieldLabel');
-  const valueInput = document.getElementById('customFieldValue');
+  const labelInput = document.getElementById("customFieldLabel");
+  const valueInput = document.getElementById("customFieldValue");
 
   const label = labelInput.value.trim();
   const value = valueInput.value.trim();
+  const selectedProfile = document.getElementById("profile-selector").value;
 
   if (label && value) {
-    chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
-      const storedData = response.data || {};
-      const customFields = storedData.customFields || [];
+    chrome.runtime.sendMessage({ type: "getProfileData" }, (response) => {
+      const profiles = response.data || {};
+      const profileData = profiles[selectedProfile] || { customFields: [] };
 
-      customFields.push({ label, value });
-      storedData.customFields = customFields;
+      profileData.customFields.push({ label, value });
+      profiles[selectedProfile] = profileData;
 
-      chrome.runtime.sendMessage({ type: 'profileData', data: storedData }, () => {
-        alert('Custom field added successfully!');
-        labelInput.value = '';
-        valueInput.value = '';
+      chrome.runtime.sendMessage({ type: "profileData", data: profiles }, () => {
+        alert("Custom field added successfully!");
+        labelInput.value = "";
+        valueInput.value = "";
         loadFields(); // Reload fields to display the new custom field
       });
     });
   } else {
-    alert('Please enter both a field name and value.');
+    alert("Please enter both a field name and value.");
   }
 }
 
+function submitApplicationForm() {
+  const applicationData = {
+    fullName: document.getElementById("fullName").value,
+    emailAddress: document.getElementById("emailAddress").value,
+    phoneNumber: document.getElementById("phoneNumber").value,
+    address: document.getElementById("address").value,
+    desiredSalary: {
+      amount: document.getElementById("desiredSalary").value,
+      currency: document.getElementById("currency").value,
+      type: document.getElementById("salaryType").value,
+    },
+    coverLetter: document.getElementById("coverLetter").value,
+  };
 
+  chrome.storage.local.set({ applicationData }, () => {
+    console.log("Application data saved:", applicationData);
+    alert("Application submitted successfully!");
+  });
+}
 
+function loadApplicationData() {
+  chrome.storage.local.get("applicationData", (result) => {
+    const applicationData = result.applicationData || {};
+
+    if (applicationData.fullName)
+      document.getElementById("fullName").value = applicationData.fullName;
+    if (applicationData.emailAddress)
+      document.getElementById("emailAddress").value =
+        applicationData.emailAddress;
+    if (applicationData.phoneNumber)
+      document.getElementById("phoneNumber").value =
+        applicationData.phoneNumber;
+    if (applicationData.address)
+      document.getElementById("address").value = applicationData.address;
+    if (applicationData.desiredSalary) {
+      document.getElementById("desiredSalary").value =
+        applicationData.desiredSalary.amount;
+      document.getElementById("currency").value =
+        applicationData.desiredSalary.currency;
+      document.getElementById("salaryType").value =
+        applicationData.desiredSalary.type;
+    }
+    if (applicationData.coverLetter)
+      document.getElementById("coverLetter").value = applicationData.coverLetter;
+  });
+}
 
 function exportData() {
   chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
@@ -152,7 +326,6 @@ function importData() {
     reader.readAsText(file);
   });
 }
-
 
 function sendDataViaEmail() {
   chrome.runtime.sendMessage({ type: 'getProfileData' }, (response) => {
@@ -221,13 +394,39 @@ document.getElementById('save-form-btn').addEventListener('click', () => {
 document.getElementById('view-history-btn').addEventListener('click', loadSavedForms);
 
 
-window.addEventListener('load', () => {
+window.addEventListener("load", () => {
+  document
+    .getElementById("addCustomFieldBtn")
+    .addEventListener("click", addCustomField);
 
-  document.getElementById('addCustomFieldBtn').addEventListener('click', addCustomField);
+  document
+    .getElementById("new-profile-btn")
+    .addEventListener("click", () => {
+      document.getElementById("new-profile-modal").style.display = "block";
+    });
 
-  document.getElementById('exportDataBtn').addEventListener('click', exportData);
-  document.getElementById('importDataBtn').addEventListener('click', importData);
-  document.getElementById('sendEmailButton').addEventListener('click', sendDataViaEmail);
+  document
+    .getElementById("cancel-profile-btn")
+    .addEventListener("click", () => {
+      document.getElementById("new-profile-modal").style.display = "none";
+    });
 
-  loadFields();
+  document
+    .getElementById("save-profile-btn")
+    .addEventListener("click", addProfile);
+
+  document
+    .getElementById('exportDataBtn')
+    .addEventListener('click', exportData);
+
+  document
+    .getElementById('importDataBtn')
+    .addEventListener('click', importData);
+
+  document
+    .getElementById('sendEmailButton')
+    .addEventListener('click', sendDataViaEmail);
+
+  loadProfiles();
+  loadApplicationData();
 });

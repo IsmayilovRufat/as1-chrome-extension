@@ -1,14 +1,6 @@
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === 'fetchPageContent') {
-    // Existing fetchPageContent logic
-  }
-
-  if (message.type === 'getProfileData') {
-    chrome.storage.local.get('profileData', (result) => {
-
 // Initialize a listener for incoming messages
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('Message received:', message); // Debugging log
+  const storageKey = "profileData";
 
   // Handle fetchPageContent logic if applicable
   if (message.type === 'fetchPageContent') {
@@ -17,49 +9,68 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return false; // No async response required
   }
 
+  if (message.type === "getAllProfiles") {
+    chrome.storage.local.get("profileData", (result) => {
+      const profiles = result.profileData || {};
+      console.log("Profiles from storage in getAllProfiles:", profiles); // Debugging log
+      sendResponse({ status: "success", data: profiles }); // Send back all profiles
+    });
+    return true; // Keeps the message channel open for async response
+  } 
+
   // Fetch profile data from chrome.storage.local
-  if (message.type === 'getProfileData') {
-    console.log('Fetching profile data...');
-    chrome.storage.local.get('profileData', (result) => {
-      console.log('Profile data retrieved:', result.profileData || {});
-      sendResponse({ status: 'success', data: result.profileData || {} });
+  if (message.type === "getProfileData") {
+    const profileName = message.profileName;
+    chrome.storage.local.get(storageKey, (result) => {
+      const profiles = result[storageKey] || {};
+      const profileData = profiles[profileName] || {};
+      sendResponse({ status: "success", data: profileData });
     });
     return true; // Keeps the message channel open for async response
   }
 
   if (message.type === 'sendProfileDataViaEmail') {
+    const profileName = message.profileName;
+  
+    if (!profileName) {
+      console.warn("No profile name specified for email.");
+      sendResponse({ status: 'error', message: 'Profile name not provided.' });
+      return false;
+    }
+  
     chrome.storage.local.get('profileData', (result) => {
-      const profileData = result.profileData || {};
-
-      // Example: Convert profile data to a string for the email body
-      const emailBody = Object.keys(profileData)
-        .map(field => `${field}: ${profileData[field]}`)
+      const profiles = result.profileData || {};
+      const profileData = profiles[profileName];
+  
+      if (!profileData) {
+        console.warn(`No data found for profile "${profileName}".`);
+        sendResponse({ status: 'error', message: `No data found for profile "${profileName}".` });
+        return;
+      }
+  
+      // Generate the email body with all fields
+      const emailBody = Object.entries(profileData)
+        .map(([field, value]) => {
+          if (Array.isArray(value)) {
+            return `${field}: ${value.join(', ')}`;
+          }
+          return `${field}: ${value}`;
+        })
         .join('\n');
-
-      // Construct mailto URL
-      const mailtoUrl = `mailto:?subject=Profile Data&body=${encodeURIComponent(emailBody)}`;
+  
+      // Construct the mailto URL
+      const mailtoUrl = `mailto:?subject=${encodeURIComponent(profileName)} Profile Data&body=${encodeURIComponent(emailBody)}`;
       
-      // Open the default mail client
+      // Open the default mail client with the generated email content
       window.open(mailtoUrl);
-
-  // Send profile data via email
-  if (message.type === 'sendProfileDataViaEmail') {
-    console.log('Sending profile data via email...');
-    chrome.storage.local.get('profileData', (result) => {
-      const profileData = result.profileData || {};
-      const emailBody = Object.keys(profileData)
-        .map((field) => `${field}: ${profileData[field]}`)
-        .join('\n');
-      const mailtoUrl = `mailto:?subject=Profile Data&body=${encodeURIComponent(emailBody)}`;
-      console.log('Generated mailto URL:', mailtoUrl);
-      window.open(mailtoUrl); // Open the default email client
-      sendResponse({ status: 'success', message: 'Email sent successfully.' });
+  
+      sendResponse({ status: 'success', message: `Email sent successfully for profile "${profileName}".` });
     });
+  
     return true; // Keeps the message channel open for async response
   }
+  
 
-  // Handle profile data management messages
-  const handleProfileData = (field, data) => {
   // Function to handle saving/updating profile data
   const handleProfileData = (field, data) => {
     console.log(`Saving profile data for field: ${field || 'entire profile'}...`);
@@ -76,26 +87,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       });
     });
   };
-
-  switch (message.type) {
-    case 'profileData':
-      handleProfileData(null, message.data);
-      return true;
-
-    case 'certificatesData':
-      handleProfileData('certificates', message.data);
-      return true;
-
-    case 'experiencesData':
-      handleProfileData('experiences', message.data);
-      return true;
-
-    case 'educationData':
-      handleProfileData('education', message.data);
-      return true;
-
-    case 'languagesData':
-      handleProfileData('languages', message.data);
 
   // Switch case to handle various message types
   switch (message.type) {
