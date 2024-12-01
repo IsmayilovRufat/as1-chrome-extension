@@ -1,0 +1,64 @@
+/* Modern Color Palette */
+body {
+    --primary-color: #101f5a; 
+    --secondary-color: #f4f4f9; /* Light gray */
+    --accent-color: #0a1337; 
+    --text-color: #333;
+    --border-color: #ddd;
+  
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  
+  h1, h2, h3 {
+    font-weight: 600;
+  }
+  
+  button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 10px 0;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  button:hover {
+    background-color: var(--accent-color);
+  }
+  
+  a.button-link {
+    text-decoration: none;
+  }
+  
+  .go-back {
+    margin-top: 20px;
+    background-color: #587c9b; /* Secondary color from palette */
+  }
+  
+  .go-back:hover {
+    background-color: #506f8b;
+  }
+  
+  textarea {
+    width: 95%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+  }
+  
+  input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+  }

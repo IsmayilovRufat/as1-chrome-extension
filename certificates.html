@@ -1,6 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
     <title>Manage Certificates</title>
     <meta charset="UTF-8">
     <style>
@@ -15,7 +18,7 @@
         margin-top: 5px;
       }
       button {
-        background-color: #0073b1;
+        background-color: #101f5a;
         color: white;
         padding: 10px;
         border: none;
@@ -24,12 +27,13 @@
         margin-bottom: 10px;
       }
       button:hover {
-        background-color: #005d8c;
+        background-color: #0a1337;
       }
     </style>
   </head>
   <body>
     <h3>Manage Certificates</h3>
+    <a class="button-link" href="popup.html"><button class="go-back">Go Back</button></a>
     <textarea id="certificatesTextarea" rows="5" placeholder="Certificates will be loaded here..."></textarea>
     <button id="refreshCertificatesBtn">Refresh Certificates</button>
     <button id="saveCertificatesBtn">Save Certificates</button>
