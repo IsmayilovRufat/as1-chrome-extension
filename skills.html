@@ -1,38 +1,46 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Manage Skills</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        padding: 10px;
-        width: 300px;
-      }
-      textarea {
-        width: 100%;
-        padding: 8px;
-        margin-top: 5px;
-      }
-      button {
-        background-color: #0073b1;
-        color: white;
-        padding: 10px;
-        border: none;
-        width: 100%;
-        cursor: pointer;
-        margin-bottom: 10px;
-      }
-      button:hover {
-        background-color: #005d8c;
-      }
-    </style>
-  </head>
-  <body>
-    <h3>Manage Skills</h3>
-    <textarea id="skillsTextarea" rows="5" placeholder="Skills will be loaded here..."></textarea>
-    <button id="refreshSkillsBtn">Refresh Skills</button>
-    <button id="saveSkillsBtn">Save Skills</button>
+<html lang="en">
+ <head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link rel="stylesheet" href="styles.css">
+   <title>Manage Skills</title>
+   <style>
+     body {
+       font-family: Arial, sans-serif;
+       padding: 10px;
+       width: 300px;
+     }
+     textarea {
+       width: 100%;
+       padding: 8px;
+       margin-top: 5px;
+     }
+     button {
+       background-color: #101f5a;
+       color: white;
+       padding: 10px;
+       border: none;
+       width: 100%;
+       cursor: pointer;
+       margin-bottom: 10px;
+     }
+     button:hover {
+       background-color: #0a1337;
+     }
+   </style>
+ </head>
+ <body>
+   <h3>Manage Skills</h3>
+   <a class="button-link" href="popup.html"><button class="go-back">Go Back</button></a>
+   <textarea id="skillsTextarea" rows="5" placeholder="Skills will be loaded here..."></textarea>
+   <button id="refreshSkillsBtn">Refresh Skills</button>
+   <button id="saveSkillsBtn">Save Skills</button>
 
-    <script src="skills.js"></script>
-  </body>
+
+   <script src="skills.js"></script>
+ </body>
 </html>
+
+
+

@@ -11,5 +11,4 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sendResponse({ status: 'error', message: 'Failed to fetch page content.' });
       }
     }
-  });
-  
+  })
