@@ -174,7 +174,51 @@ function sendDataViaEmail() {
   });
 }
 
+// Function to save form data in localStorage
+function saveFormData(data) {
+  const savedForms = JSON.parse(localStorage.getItem('savedForms')) || [];
+  savedForms.push({ id: Date.now(), data: data });
+  localStorage.setItem('savedForms', JSON.stringify(savedForms));
+  alert('Form data saved!');
+}
 
+// Function to load saved forms from localStorage
+function loadSavedForms() {
+  const savedForms = JSON.parse(localStorage.getItem('savedForms')) || [];
+  const savedFormsList = document.getElementById('saved-forms-list');
+  savedFormsList.innerHTML = ''; // Clear the list
+  savedForms.forEach((form) => {
+      const listItem = document.createElement('li');
+      listItem.textContent = `Saved Form - ${new Date(form.id).toLocaleString()}`;
+      listItem.onclick = () => restoreFormData(form.data);
+      savedFormsList.appendChild(listItem);
+  });
+  document.getElementById('history-section').style.display = 'block';
+}
+
+// Function to restore form data from a saved entry
+function restoreFormData(data) {
+  for (const name in data) {
+      const field = document.querySelector(`[name="${name}"]`);
+      if (field) field.value = data[name];
+  }
+  alert('Form data restored!');
+}
+
+// Event listeners for saving, viewing history, and closing history
+document.getElementById('close-history').addEventListener('click', () => {
+  document.getElementById('history-section').style.display = 'none';
+});
+
+document.getElementById('save-form-btn').addEventListener('click', () => {
+  const formData = {}; // Collect form data
+  document.querySelectorAll('input, textarea, select').forEach((field) => {
+      if (field.name) formData[field.name] = field.value;
+  });
+  saveFormData(formData);
+});
+
+document.getElementById('view-history-btn').addEventListener('click', loadSavedForms);
 
 
 window.addEventListener('load', () => {
