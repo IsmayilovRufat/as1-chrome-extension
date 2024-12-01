@@ -13,6 +13,12 @@ This tool is a Chrome extension designed to simplify the process of filling out 
 - Manually add or edit additional fields, such as certificates, personal summaries, or portfolio links.
 - Save all data securely in local storage for offline use.
 
+### Profile Switching. 
+-   Enable users to create multiple profiles (e.g., for different industries or job roles) that they can switch between, depending on the type of application they are filling out.
+
+### Form Field Mapping 
+-   Implement a feature where users can map LinkedIn fields to specific form fields, ensuring accurate form filling even for forms with unique field names.
+
 ###  Automatic Cover Letter Generation *(Bonus)*
 - Automatically detect the job title and company name during applications.
 - Generate tailored cover letters using free API services (e.g., [Gemini AI](https://ai.google.dev/pricing#1_5flash)).
@@ -35,6 +41,8 @@ This tool is a Chrome extension designed to simplify the process of filling out 
 3. Enable **Developer Mode** and click **Load unpacked**.
 4. Select the project folder to install the extension.
 
+---
+
 ### Key Actions
 1. **Fetch LinkedIn Data**: Navigate to your [LinkedIn Profile](https://www.linkedin.com/in/username-6a2936233/), then use the extension to extract data.
 2. **Manage Profiles**: Create or edit profiles for streamlined application processes.
@@ -42,22 +50,68 @@ This tool is a Chrome extension designed to simplify the process of filling out 
 
 ---
 
+### Profile Management
+1. Creating a Profile
+-   In the popup, click the New Profile button.
+-   Enter a name for the new profile in the modal that appears.
+-   Click Save Profile to create the profile. The profile is stored locally and becomes available in the profile dropdown.Switching Between Profiles
+-   Use the profile dropdown to select a different profile.
+
+---
+
+### How to scrape the data
+Skills:	
+-   https://www.linkedin.com/in/<profile-username>/details/skills/	
+-   Navigate to this URL.
+-   Click Refresh Skills.
+-   Save data for the current profile.
+Certificates:	
+-   https://www.linkedin.com/in/<profile-username>/details/certifications/	
+-   Navigate to this URL.
+-   lick Refresh Certificates.
+-   Save data for the current profile.
+Experiences: 
+-   https://www.linkedin.com/in/<profile-username>/details/experience/ 
+-   Navigate to this URL.
+-   Click Refresh Experiences.
+-   Save data for the current profile.
+Education:	
+-   https://www.linkedin.com/in/<profile-username>/details/education/	
+-   Navigate to this URL.
+-   Click Refresh Education.
+-   Save data for the current profile.
+Languages: 
+-   https://www.linkedin.com/in/<profile-username>/details/languages/	
+-   Navigate to this URL.
+-   Click Refresh Languages.
+-   Save data for the current profile.
+Personal Info:	
+-   https://www.linkedin.com/in/<profile-username>/overlay/contact-info/	
+-   Navigate to this URL.
+-   Fill in personal fields (Name, Email, Website, etc.).
+-   Save data for the current profile.
+
+---
+
+### Saving and Refreshing Data
+-   After scraping or entering data manually, click the Save button to store the data locally for the currently selected profile.
+-   Each section (Skills, Certificates, Experiences, etc.) has its own Save button, ensuring modular storage.
+
+Refreshing Data:
+-   The Refresh button allows you to rescrape or reload data from LinkedIn or clear fields for manual entry.
+
+---
+
+## Profile Form
+To use this feature, you need select the profile first and then start to scrape data as mentioned previously. When you scrape data it will also load to related field in Profile Form. When you finished the scraping, navigate to the Profile Form page and save the data. It will be stores in local storage of selected user.
+
+
 ## Permissions
 
 The extension uses the following permissions:
 - **Storage**: To save user data locally.
 - **Active Tab**: To interact with the current browser tab for LinkedIn data extraction and form auto-fill.
 - **Scripting**: To fill forms dynamically based on the extracted or user-provided data.
-
----
-
-## Endpoints Used
-- https://www.linkedin.com/in/username/details/skills  
-- https://www.linkedin.com/in/username/details/experience 
-- https://www.linkedin.com/in/username/overlay/contact-info  
-- https://www.linkedin.com/in/username/details/education 
-- https://www.linkedin.com/in/username/details/certifications  
-- https://www.linkedin.com/in/username/details/languages  
 
 ---
 

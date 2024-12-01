@@ -50,6 +50,26 @@
    <h1>LinkedIn Profile Editor</h1>
    <hr>
    <br>
+
+   <div id="profileSwitchingSection" class="section">
+    <h3>Profiles</h3>
+    <label for="profile-selector">Select Profile:</label>
+    <select id="profile-selector"></select>
+    <button id="new-profile-btn">New Profile</button>
+  </div>
+  
+  <div id="new-profile-modal">
+    <h3>Create New Profile</h3>
+    <label for="new-profile-name">Profile Name:</label>
+    <input type="text" id="new-profile-name" placeholder="Enter profile name" />
+    <button id="save-profile-btn">Save Profile</button>
+    <button id="cancel-profile-btn">Cancel</button>
+  </div>
+
+  <div id="profileFields"></div>
+  
+  <hr>
+
    <div id="customFieldSection">
      <h3>Add New Field</h3>
      <label for="customFieldLabel">Field Name:</label>
@@ -63,8 +83,9 @@
      <button id="addCustomFieldBtn">Add Field</button>
    </div>
    <br>
-   <br>
+   <br> 
    <hr>
+   <a class="button-link" href="form.html"><button>Manage Profile Form</button></a>
    <a class="button-link" href="skills.html"><button>Manage Skills</button></a>
    <a class="button-link" href="certificates.html"><button>Manage Certificates</button></a>
    <a class="button-link" href="experiences.html"><button>Manage Experiences</button></a>

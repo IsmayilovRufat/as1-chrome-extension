@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Profile Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 10px;
+      width: 400px;
+    }
+    textarea, input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    textarea {
+      height: 100px;
+    }
+    button {
+      background-color: #0073b1;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #005d8c;
+    }
+    h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h3>Manage Profile Form</h3>
+  
+  <form id="form">
+    <div>
+      <label for="nameInput">Name:</label>
+      <input type="text" id="nameInput" placeholder="Enter your name">
+    </div>
+    <div>
+      <label for="websiteInput">Website:</label>
+      <input type="url" id="websiteInput" placeholder="Enter your website">
+    </div>
+    <div>
+      <label for="birthdayInput">Birthday:</label>
+      <input type="text" id="birthdayInput" placeholder="Enter your birthday (e.g., YYYY-MM-DD)">
+    </div>    
+    <div>
+      <label for="emailInput">Email:</label>
+      <input type="email" id="emailInput" placeholder="Enter your email">
+    </div>
+    <div>
+      <label for="skillsTextarea">Skills:</label>
+      <textarea id="skillsTextarea" rows="4" placeholder="Enter skills"></textarea>
+    </div>
+    <div>
+      <label for="certificatesTextarea">Certificates:</label>
+      <textarea id="certificatesTextarea" rows="4" placeholder="Enter certificates"></textarea>
+    </div>
+    <div>
+      <label for="experiencesTextarea">Experiences:</label>
+      <textarea id="experiencesTextarea" rows="4" placeholder="Enter experiences"></textarea>
+    </div>
+    <div>
+      <label for="educationTextarea">Education:</label>
+      <textarea id="educationTextarea" rows="4" placeholder="Enter education"></textarea>
+    </div>
+    <div>
+      <label for="languagesTextarea">Languages:</label>
+      <textarea id="languagesTextarea" rows="4" placeholder="Enter languages"></textarea>
+    </div>
+    <div>
+      <label for="bioTextarea">Bio:</label>
+      <textarea id="bioTextarea" rows="4" placeholder="Enter your bio"></textarea>
+    </div>
+    <button id="refreshFormBtn">Refresh</button>
+    <button id="saveFormBtn">Save</button>
+   
+  </form>
+  <a class="button-link" href="popup.html"><button class="go-back">Go Back</button></a>
+  <script src="form.js"></script>
+</body>
+</html>
