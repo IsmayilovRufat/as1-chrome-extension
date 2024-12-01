@@ -220,6 +220,78 @@ document.getElementById('save-form-btn').addEventListener('click', () => {
 
 document.getElementById('view-history-btn').addEventListener('click', loadSavedForms);
 
+// popup.js
+
+// ... (other parts of your code)
+
+// Function to create a new profile
+function createProfile() {
+  const profileName = prompt("Enter profile name:");
+  if (profileName) {
+    // Get existing profiles from storage
+    chrome.storage.local.get("profiles", (data) => {
+      const profiles = data.profiles || {};
+      // Create a new profile object (initially empty)
+      profiles[profileName] = {}; 
+      // Save the updated profiles to storage
+      chrome.storage.local.set({ profiles: profiles }, () => {
+        alert("Profile created!");
+        updateProfileList(); // Update the profile list in the UI
+      });
+    });
+  }
+}
+
+// Function to switch profiles
+function switchProfile(profileName) {
+  // Load the selected profile's data from storage
+  chrome.storage.local.get("profiles", (data) => {
+    const profiles = data.profiles || {};
+    const selectedProfileData = profiles[profileName];
+
+    if (selectedProfileData) {
+      // Update the UI to reflect the active profile
+      // Display the active profile name (you might have an element for this)
+      document.getElementById("active-profile-name").textContent = profileName; 
+
+      // Populate form fields with the profile data
+      for (const fieldName in selectedProfileData) {
+        const field = document.querySelector(`[name="${fieldName}"]`);
+        if (field) {
+          field.value = selectedProfileData[fieldName];
+        }
+      }
+
+      alert(`Switched to profile: ${profileName}`);
+    } else {
+      alert("Profile not found!");
+    }
+  });
+}
+
+// ... (rest of your code)
+
+// Function to update the profile list in the UI
+function updateProfileList() {
+  chrome.storage.local.get("profiles", (data) => {
+    const profiles = data.profiles || {};
+    const profileList = document.getElementById("profile-list");
+    profileList.innerHTML = ""; // Clear the list
+    for (const profileName in profiles) {
+      const listItem = document.createElement("li");
+      listItem.textContent = profileName;
+      listItem.onclick = () => switchProfile(profileName);
+      profileList.appendChild(listItem);
+    }
+  });
+}
+
+// Add event listeners for profile actions
+document.getElementById("create-profile-btn").addEventListener("click", createProfile);
+// Call updateProfileList() on popup load to display the initial list of profiles
+updateProfileList();
+
+// ... (rest of your code)
 
 window.addEventListener('load', () => {
 
