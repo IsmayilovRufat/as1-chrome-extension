@@ -42,13 +42,6 @@ This tool is a Chrome extension designed to simplify the process of filling out 
 
 ---
 
-## Demonstration Video
-
-[Watch the Demo](#)  
-*(Upload the video link here once available.)*
-
----
-
 ## Permissions
 
 The extension uses the following permissions:
@@ -59,12 +52,12 @@ The extension uses the following permissions:
 ---
 
 ## Endpoints Used
-- [LinkedIn Skills](https://www.linkedin.com/in/username-6a2936233/details/skills)  
-- [LinkedIn Experience](https://www.linkedin.com/in/username-6a2936233/details/experience)  
-- [LinkedIn Contact Info](https://www.linkedin.com/in/username-6a2936233/overlay/contact-info)  
-- [LinkedIn Education](https://www.linkedin.com/in/username-6a2936233/details/education)  
-- [LinkedIn Certifications](https://www.linkedin.com/in/username-6a2936233/details/certifications)  
-- [LinkedIn Languages](https://www.linkedin.com/in/username-6a2936233/details/languages)  
+- https://www.linkedin.com/in/username/details/skills  
+- https://www.linkedin.com/in/username/details/experience 
+- https://www.linkedin.com/in/username/overlay/contact-info  
+- https://www.linkedin.com/in/username/details/education 
+- https://www.linkedin.com/in/username/details/certifications  
+- https://www.linkedin.com/in/username/details/languages  
 
 ---
 
